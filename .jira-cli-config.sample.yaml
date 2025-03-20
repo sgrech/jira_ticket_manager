@@ -1,0 +1,21 @@
+# JIRA CLI Configuration File
+# This file is stored at ~/.jira-cli-config.yaml
+# The permissions of this file are set to 0600 (read/write for owner only)
+# for security since it contains sensitive credentials
+
+# JIRA Server URL (required)
+# For Jira Cloud, this is typically https://your-domain.atlassian.net
+server: https://your-company.atlassian.net
+
+# Username is typically your email address associated with your JIRA account
+username: your.email@example.com
+
+# API token for authentication
+# For Jira Cloud, you can generate this at: 
+# https://id.atlassian.com/manage-profile/security/api-tokens
+api_token: your_api_token_here
+
+# Optional default settings
+# default_project: PROJ
+# default_assignee: currentUser()
+# max_results: 50

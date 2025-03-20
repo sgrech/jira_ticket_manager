@@ -1,0 +1,66 @@
+# Sample JIRA ticket creation template
+# Save this as ticket.yaml and customize before using
+
+# Required fields
+project:
+  key: PROJ   # Replace with your actual project key
+issuetype:
+  name: Bug   # Options typically include: Bug, Task, Story, Epic, etc.
+summary: Fix login page error on mobile devices
+
+# Description - supports JIRA markup
+description: |
+  h2. Problem
+  The login page doesn't render correctly on mobile devices with screen widths below 375px.
+  
+  h2. Steps to Reproduce
+  # Open the application on an iPhone SE or similar small device
+  # Navigate to the login page
+  # Observe that the input fields are cut off
+  
+  h2. Expected Behavior
+  The login form should be fully visible and usable on all supported devices.
+  
+  h2. Technical Details
+  * Browser: Safari, Chrome
+  * OS: iOS 16, Android 13
+  * Device: iPhone SE, Google Pixel 4a
+
+# Optional fields
+priority:
+  name: Medium  # Options: Highest, High, Medium, Low, Lowest
+
+# Assignee (leave empty for automatic assignment based on project settings)
+# assignee:
+#   name: john.doe@example.com
+
+# Labels
+labels:
+  - mobile
+  - ui
+  - regression
+
+# Component(s)
+components:
+  - name: Frontend
+  - name: Authentication
+
+# Fix Version(s)
+fixVersions:
+  - name: 2.5.0
+
+# Due date (YYYY-MM-DD format)
+duedate: 2025-04-01
+
+# Custom fields (these will vary based on your JIRA configuration)
+# customfield_10001: Custom value
+# customfield_10002:
+#   value: Option 1  # For select fields
+
+# Environment
+environment: Production
+
+# Watchers to add (by username)
+# watchers:
+#   - jane.doe@example.com
+#   - james.smith@example.com
