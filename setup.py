@@ -1,13 +1,13 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="jira-ticket-manager",
+    name="jira_ticket_manager",
     version="0.1",
     packages=find_packages(),
     install_requires=['jira', 'PyYAML', 'prettytable'],
     entry_points={
         'console_scripts': [
-            'jirals=jira-ticket-manager.jirals:main',
+            'jirals=jira_ticket_manager.jirals:main',
         ],
     },
     description="A simple tool to manage JIRA tickets",
