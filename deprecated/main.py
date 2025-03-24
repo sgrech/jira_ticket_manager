@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-JIRA Ticket Manager - A command-line interface for managing JIRA tickets.
+JIRA Ticket Manager - A command-line interface for managing JIRA issues.
 
 Features:
-1. List JIRA tickets based on filters
-2. View individual ticket details
-3. Create JIRA tickets from YAML templates
+1. List JIRA issues based on filters
+2. View individual issue details
+3. Create JIRA issues from YAML templates
 """
 
 import argparse
@@ -98,8 +98,8 @@ class JiraManager:
         if save == 'y':
             self._save_config()
 
-    def list_tickets(self, jql=None, max_results=50):
-        """List JIRA tickets based on JQL filter."""
+    def list_issues(self, jql=None, max_results=50):
+        """List JIRA issues based on JQL filter."""
         if not jql:
             jql = "assignee = currentUser() ORDER BY updated DESC"
 
@@ -107,7 +107,7 @@ class JiraManager:
             issues = self.jira.search_issues(jql, maxResults=max_results)
 
             if not issues:
-                print("No tickets found matching your criteria.")
+                print("No issues found matching your criteria.")
                 return
 
             table = PrettyTable()
@@ -150,15 +150,15 @@ class JiraManager:
                 ])
 
             print(table)
-            print(f"\nTotal tickets: {len(issues)}")
+            print(f"\nTotal issues: {len(issues)}")
 
         except Exception as e:
-            print(f"Error listing tickets: {e}")
+            print(f"Error listing issues: {e}")
 
-    def view_ticket(self, ticket_key):
-        """View details of a specific JIRA ticket."""
+    def view_issue(self, issue_key):
+        """View details of a specific JIRA issue."""
         try:
-            issue = self.jira.issue(ticket_key)
+            issue = self.jira.issue(issue_key)
 
             # Header
             print("\n" + "="*80)
@@ -215,36 +215,36 @@ class JiraManager:
                     print(comment.body)
 
         except Exception as e:
-            print(f"Error viewing ticket {ticket_key}: {e}")
+            print(f"Error viewing issue {issue_key}: {e}")
 
-    def create_ticket(self, yaml_file):
-        """Create a JIRA ticket from YAML file."""
+    def create_issue(self, yaml_file):
+        """Create a JIRA issue from YAML file."""
         try:
             # Load YAML file
             with open(yaml_file, 'r') as file:
-                ticket_data = yaml.safe_load(file)
+                issue_data = yaml.safe_load(file)
 
             # Validate required fields
             required_fields = ['project', 'summary', 'issuetype']
             for field in required_fields:
-                if field not in ticket_data:
+                if field not in issue_data:
                     print(
                         f"Error: Missing required field '{field}' in YAML file")
                     return
 
             # Create the issue
-            new_issue = self.jira.create_issue(fields=ticket_data)
+            new_issue = self.jira.create_issue(fields=issue_data)
 
-            print(f"Success! Created ticket {new_issue.key}")
+            print(f"Success! Created issue {new_issue.key}")
 
-            # Offer to view the created ticket
+            # Offer to view the created issue
             view = input(
-                f"View ticket {new_issue.key}? (y/n): ").lower().strip()
+                f"View issue {new_issue.key}? (y/n): ").lower().strip()
             if view == 'y':
-                self.view_ticket(new_issue.key)
+                self.view_issue(new_issue.key)
 
         except Exception as e:
-            print(f"Error creating ticket: {e}")
+            print(f"Error creating issue: {e}")
 
 
 def main():
@@ -261,16 +261,16 @@ def main():
     subparsers = parser.add_subparsers(dest='command', help='Command')
 
     # List command
-    list_parser = subparsers.add_parser('list', help='List JIRA tickets')
-    list_parser.add_argument('--jql', help='JQL query to filter tickets')
+    list_parser = subparsers.add_parser('list', help='List JIRA issues')
+    list_parser.add_argument('--jql', help='JQL query to filter issues')
     list_parser.add_argument(
-        '--max', type=int, default=50, help='Maximum number of tickets to display')
+        '--max', type=int, default=50, help='Maximum number of issues to display')
 
     # Common JQL shortcuts
     list_parser.add_argument(
-        '--my-tickets', action='store_true', help='Show tickets assigned to me')
+        '--my-issues', action='store_true', help='Show issues assigned to me')
     list_parser.add_argument(
-        '--my-reported', action='store_true', help='Show tickets reported by me')
+        '--my-reported', action='store_true', help='Show issues reported by me')
     list_parser.add_argument('--project', help='Filter by project key')
     list_parser.add_argument(
         '--status', help='Filter by status (e.g., "In Progress,Done")')
@@ -280,15 +280,15 @@ def main():
         '--tags', help='Filter by tags (e.g., "bug,security")')
 
     # View command
-    view_parser = subparsers.add_parser('view', help='View a JIRA ticket')
+    view_parser = subparsers.add_parser('view', help='View a JIRA issue')
     view_parser.add_argument(
-        'ticket_key', help='JIRA ticket key (e.g., PROJ-123)')
+        'issue_key', help='JIRA issue key (e.g., PROJ-123)')
 
     # Create command
     create_parser = subparsers.add_parser(
-        'create', help='Create a JIRA ticket from YAML file')
+        'create', help='Create a JIRA issue from YAML file')
     create_parser.add_argument(
-        'yaml_file', help='Path to YAML file with ticket details')
+        'yaml_file', help='Path to YAML file with issue details')
 
     # Parse arguments
     args = parser.parse_args()
@@ -310,7 +310,7 @@ def main():
         # Build JQL from args
         jql_parts = []
 
-        if args.my_tickets:
+        if args.my_issues:
             jql_parts.append("assignee = currentUser()")
         if args.my_reported:
             jql_parts.append("reporter = currentUser()")
@@ -340,13 +340,13 @@ def main():
         else:
             jql = args.jql
 
-        jira_manager.list_tickets(jql=jql, max_results=args.max)
+        jira_manager.list_issues(jql=jql, max_results=args.max)
 
     elif args.command == 'view':
-        jira_manager.view_ticket(args.ticket_key)
+        jira_manager.view_issue(args.issue_key)
 
     elif args.command == 'create':
-        jira_manager.create_ticket(args.yaml_file)
+        jira_manager.create_issue(args.yaml_file)
 
 
 if __name__ == "__main__":

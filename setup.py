@@ -8,6 +8,7 @@ setup(
     entry_points={
         'console_scripts': [
             'jirals=jira_ticket_manager.jirals:main',
+            'jiracat=jira_ticket_manager.jiracat:main',
         ],
     },
     description="A simple tool to manage JIRA tickets",
